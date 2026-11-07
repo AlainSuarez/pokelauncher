@@ -2,9 +2,11 @@
 
 Tu colección de Pokémon, en un solo lugar.
 
-PokéLauncher es una aplicación local para Linux que reúne tus juegos de Pokémon en una biblioteca visual. Explora las entregas de Game Boy a Nintendo 3DS, abre tus ROMs con el emulador que prefieras y consulta información de los juegos, su Pokédex y tus partidas desde una misma interfaz.
+PokéLauncher es un proyecto en desarrollo para reunir tu colección de Pokémon, la Pokédex y tus partidas en una plataforma web.
 
-Funciona en el navegador y se ejecuta en tu propio equipo. No necesitas Node.js ni una cuenta para usarlo.
+La propuesta combina una interfaz web con un servicio local en tu equipo. Desde la web podrás explorar tus juegos, consultar tus partidas y abrirlos con los emuladores que ya utilizas; el servicio local será el puente con tus archivos y emuladores.
+
+El prototipo actual permite probar parte de esta experiencia ejecutando la interfaz y el servidor juntos en el equipo. La separación entre la plataforma web y el servicio local todavía está pendiente.
 
 ## Un vistazo
 
@@ -26,18 +28,18 @@ Elige tus carpetas de ROMs y configura emuladores nativos, AppImage o Flatpak pa
 
 ![Configuración de carpetas y emuladores](docs/screenshots/configuracion.png)
 
-Las capturas muestran la aplicación con una configuración nueva, sin ROMs ni partidas personales.
+Las capturas muestran el prototipo actual con una configuración nueva, sin ROMs ni partidas personales. La interfaz y las funciones pueden cambiar durante el desarrollo.
 
-## Qué puedes hacer
+## Funciones del prototipo
 
 - **Explorar tu colección:** buscar por nombre, filtrar por consola, ordenar los juegos y guardar favoritos.
 - **Lanzar tus juegos:** localizar ROMs en tus carpetas, asociarlas al catálogo y abrirlas con un emulador externo.
 - **Consultar la Pokédex:** descargar los paquetes disponibles y después consultar sus fichas sin conexión, con ilustraciones, tipos, estadísticas y movimientos según la edición.
 - **Ver tus partidas:** consultar entrenador, equipo y cajas mediante el lector opcional basado en PKHeX.Core. La lectura utiliza una copia y conserva el archivo original.
 
-## Empezar
+## Probar la versión en desarrollo
 
-Necesitas **Linux con sesión gráfica** y **Python 3.10 o posterior**. Para jugar también necesitas tus propias ROMs y un emulador compatible instalado.
+El prototipo se ejecuta actualmente en **Linux con sesión gráfica** y **Python 3.10 o posterior**. Este es el entorno de desarrollo actual; la compatibilidad del futuro servicio local con otros sistemas está por definir. Para jugar también necesitas tus propias ROMs y un emulador compatible instalado.
 
 Desde la carpeta del proyecto, instala las dependencias y arranca la aplicación con el Python del sistema:
 
@@ -71,9 +73,11 @@ Después, inicia el launcher, configura la carpeta de partidas del emulador y ab
 
 ## Estado del proyecto
 
-PokéLauncher es un proyecto personal de hobby en desarrollo. La biblioteca y el lanzamiento mediante emuladores externos están disponibles. La Pokédex ofrece paquetes de Kanto y Kalos; el resto de regiones se incorporará progresivamente. El visor de partidas es experimental: se ha comprobado con Pokémon Y y la compatibilidad con las demás ediciones sigue pendiente de validación.
+PokéLauncher es un proyecto personal de hobby en desarrollo. El objetivo es ofrecer una plataforma web conectada a un servicio local para acceder a tus partidas y lanzar tus juegos con tus emuladores. La plataforma web independiente y su conexión con el servicio local todavía no están disponibles.
 
-La aplicación se sirve únicamente en tu equipo. La biblioteca y la configuración funcionan sin conexión; la Pokédex necesita Internet para descargar sus recursos por primera vez.
+En el prototipo ya están disponibles la biblioteca y el lanzamiento mediante emuladores externos. La Pokédex ofrece paquetes de Kanto y Kalos; el resto de regiones se incorporará progresivamente. El visor de partidas es experimental: se ha comprobado con Pokémon Y y la compatibilidad con las demás ediciones sigue pendiente de validación.
+
+Por ahora, la interfaz y el servidor se ejecutan en tu equipo. En esta versión, la biblioteca y la configuración funcionan sin conexión; la Pokédex necesita Internet para descargar sus recursos por primera vez.
 
 Los ajustes se guardan en `~/.local/share/pokelauncher/` o en la ubicación definida por `XDG_DATA_HOME`. Puedes elegir otra carpeta con `python server.py --data-dir /ruta/a/datos`.
 

@@ -1,0 +1,74 @@
+<div class="pokedex" id="pokedex" data-game="{{ game.id }}" data-ready="{{ 'true' if pokedex else 'false' }}">
+  <header class="pokedex-heading">
+    <div><p class="eyebrow">GUÍA DE TU AVENTURA</p><h2>Pokédex · {{ game.name }}</h2>
+    {% if pokedex %}<p>{{ pokedex.edition.dex_name }} · {{ pokedex.total }} especies · Disponible sin conexión</p>{% endif %}</div>
+    {% if pokedex %}
+    <div class="pokedex-tools">
+      <span class="pokedex-offline"><span class="status-dot"></span> Guardada en este equipo</span>
+      {% if download.status != 'ready' %}
+      <button type="button" class="btn btn-ghost pokedex-complete" id="download-pokedex" title="Descargar los recursos que faltan de esta edición" {% if download.status == 'downloading' %}disabled{% endif %}>{{ 'Descargando…' if download.status == 'downloading' else 'Reanudar' if download.status in ['paused','error'] else 'Completar edición' }}</button>
+      {% endif %}
+    </div>
+    {% endif %}
+  </header>
+  {% if pokedex and download.status != 'ready' %}
+  <div class="pokedex-sync" id="pokedex-sync" {% if download.status not in ['downloading','error','paused'] %}hidden{% endif %}>
+    <div class="pokedex-sync-status"><p id="pokedex-download-status" role="status" aria-live="polite">{{ download.message }}</p><span id="pokedex-download-count">{% if download.total %}{{ download.completed }} / {{ download.total }}{% endif %}</span></div>
+    <progress id="pokedex-progress" max="{{ download.total or 1 }}" value="{{ download.completed }}"></progress>
+  </div>
+  {% endif %}
+  {% if not pokedex %}
+  <section class="pokedex-download" aria-labelledby="download-title">
+    <div class="pokedex-device" aria-hidden="true">◉</div>
+    {% if download.status == 'unsupported' %}
+      <h3 id="download-title">Pokédex de {{ game.region }}</h3>
+      <p>El paquete de {{ game.name }} todavía no está preparado. Lo incorporaremos en una próxima etapa.</p>
+    {% else %}
+      <h3 id="download-title">Tu Pokédex de {{ game.region }}, siempre contigo</h3>
+      <p>Descarga los Pokémon, sus imágenes y los datos básicos de esta edición. La Pokédex y las ilustraciones se comparten con los juegos que utilizan la misma lista.</p>
+      {% if game.id in ['x', 'y'] %}<p class="pokedex-download-note">Incluye Kalos Central, Costa y Montaña. Una sola descarga para Pokémon X e Y.</p>{% endif %}
+      <p class="pokedex-download-note">Si se interrumpe, podrás reanudarla aprovechando lo ya descargado.</p>
+      <progress id="pokedex-progress" max="{{ download.total or 1 }}" value="{{ download.completed }}" {% if download.status == 'empty' %}hidden{% endif %}></progress>
+      <p id="pokedex-download-status" role="status" aria-live="polite">{{ download.message }}</p>
+      <p id="pokedex-download-count" class="pokedex-download-note">{% if download.total %}{{ download.completed }} / {{ download.total }} Pokémon preparados{% endif %}</p>
+      <button type="button" class="btn btn-primary" id="download-pokedex" {% if download.status == 'downloading' %}disabled{% endif %}>
+        {{ 'Descargando…' if download.status == 'downloading' else 'Reanudar descarga' if download.status in ['paused', 'error'] else 'Descargar Pokédex de ' ~ game.region }}
+      </button>
+      <noscript><p>Activa JavaScript para descargar la Pokédex desde la aplicación.</p></noscript>
+    {% endif %}
+  </section>
+  {% endif %}
+  {% if pokedex %}
+    {% if pokedex.edition.dexes|length > 1 %}
+    <nav class="pokemon-index" aria-label="Pokédex de Kalos">
+      {% for dex in pokedex.edition.dexes %}<a href="{{ url_for('pages.game', game_id=game.id, section='pokedex', dex=dex.slug) }}" {% if dex.slug == pokedex.edition.dex_slug %}aria-current="page"{% endif %}>{{ dex.name }}</a>{% endfor %}
+    </nav>
+    {% endif %}
+    {% if pokedex.selected %}
+      {% include 'pokedex/_detail.html' %}
+    {% else %}
+      <form class="pokedex-filters" method="get" action="{{ url_for('pages.game', game_id=game.id) }}">
+        <input type="hidden" name="section" value="pokedex">
+        <input type="hidden" name="dex" value="{{ pokedex.edition.dex_slug }}">
+        <label>Buscar Pokémon<input type="search" name="q" value="{{ pokedex.search }}" placeholder="Nombre o número…" maxlength="100"></label>
+        <label>Tipo<select name="type"><option value="">Todos los tipos</option>{% for slug, name in pokedex.types %}<option value="{{ slug }}" {% if slug == pokedex.type_slug %}selected{% endif %}>{{ name }}</option>{% endfor %}</select></label>
+        <button class="btn btn-primary">Filtrar</button>
+        {% if pokedex.search or pokedex.type_slug %}<a class="btn btn-ghost" href="{{ url_for('pages.game', game_id=game.id, section='pokedex', dex=pokedex.edition.dex_slug) }}">Limpiar</a>{% endif %}
+      </form>
+      <p class="pokedex-results" role="status">{{ pokedex.pokemon|length }} de {{ pokedex.total }} Pokémon</p>
+      <div class="pokedex-grid">
+      {% for pokemon in pokedex.pokemon %}
+        <a class="pokemon-card" href="{{ url_for('pages.game', game_id=game.id, section='pokedex', pokemon=pokemon.id, q=pokedex.search, type=pokedex.type_slug, dex=pokedex.edition.dex_slug) }}">
+          <span class="pokemon-number">#{{ '%03d'|format(pokemon.number) }}</span>
+          <div class="pokemon-art"><img src="{{ url_for('pokedex.image', filename=pokemon.artwork) }}" alt="{{ pokemon.name }}" loading="lazy" width="160" height="160"></div>
+          <h3>{{ pokemon.name }}</h3>
+          <div class="pokemon-types">{% for kind in pokemon.types %}<span class="pokemon-type type-{{ kind.slug }}">{{ kind.name }}</span>{% endfor %}</div>
+        </a>
+      {% else %}
+        <div class="pokedex-no-results"><h3>No hay Pokémon con estos filtros</h3><p>Prueba otro nombre, número o tipo.</p></div>
+      {% endfor %}
+      </div>
+    {% endif %}
+    <p class="pokedex-attribution">Datos e imágenes: <a href="https://pokeapi.co/" target="_blank" rel="noopener noreferrer">PokéAPI</a>. La Pokédex incluye las especies de la región; su presencia no implica que puedan capturarse todas en esta edición.</p>
+  {% endif %}
+</div>

@@ -1,0 +1,24 @@
+<section class="pokemon-edition" id="pokemon-edition" aria-labelledby="pokemon-edition-title">
+  <header class="pokemon-section-heading"><div><p class="eyebrow">EN ESTA EDICIÓN</p><h3 id="pokemon-edition-title">{{ game.name }}</h3></div><span class="pokemon-caption">Generación {{ pokedex.edition.generation }} · {{ pokedex.edition.dex_name }} #{{ '%03d'|format(pokemon.number) }}</span></header>
+  <div class="pokemon-edition-summary">
+    <div>
+      <div class="pokemon-types">{% for kind in pokemon.types %}<span class="pokemon-type type-{{ kind.slug }}">{{ kind.name }}</span>{% endfor %}</div>
+      {% if pokemon.description %}<p class="pokemon-description" lang="{{ pokemon.language }}">{{ pokemon.description }}</p>{% if pokemon.language != 'es' %}<p class="pokemon-caption">Texto original de esta edición en inglés.</p>{% endif %}{% else %}<p class="pokemon-caption">No hay un texto de esta edición en los datos locales.</p>{% endif %}
+      {% if profile and (profile.abilities or profile.effort or profile.held_items) %}
+      <dl class="pokemon-facts-list">
+        {% if profile.abilities %}<div><dt>Habilidades en este juego</dt><dd>{% for ability in profile.abilities %}{{ ability.name }}{% if ability.hidden %} (oculta){% endif %}{{ ' · ' if not loop.last }}{% endfor %}</dd></div>{% endif %}
+        {% if profile.effort %}<div><dt>EV en este juego</dt><dd>{% for item in profile.effort %}{{ item.value }} {{ item.name }}{{ ' · ' if not loop.last }}{% endfor %}</dd></div>{% endif %}
+        {% if profile.held_items %}<div><dt>Objetos equipados salvajes</dt><dd>{% for item in profile.held_items %}{{ item.name }} ({{ item.rarity }}%){{ ' · ' if not loop.last }}{% endfor %}</dd></div>{% endif %}
+      </dl>
+      {% endif %}
+    </div>
+    {% if pokemon.sprite %}<figure class="pokemon-edition-figure"><img src="{{ url_for('pokedex.image', filename=pokemon.sprite) }}" alt="Sprite de {{ pokemon.name }} en {{ game.name }}" width="112" height="112"><figcaption>Sprite de esta edición</figcaption></figure>{% endif %}
+  </div>
+  {% include 'pokedex/_stats.html' %}
+  {% if profile and profile.defenses %}
+  <section class="pokemon-defenses" aria-labelledby="pokemon-defenses-title">
+    <h4 id="pokemon-defenses-title">Defensas por tipo</h4><p class="pokemon-caption">Efectividad según los tipos y la generación del juego, sin efectos de habilidades.</p>
+    <div class="pokemon-defense-groups">{% for group in profile.defenses %}<div><h5>{{ group.label }}</h5><div class="pokemon-types">{% for kind in group.types %}<span class="pokemon-type type-{{ kind.slug }}">{{ kind.name }} <strong>{{ kind.factor }}</strong></span>{% endfor %}</div></div>{% endfor %}</div>
+  </section>
+  {% endif %}
+</section>

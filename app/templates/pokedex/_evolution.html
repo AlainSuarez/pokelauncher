@@ -1,0 +1,18 @@
+{% if profile.evolution_stages %}
+<section class="pokemon-data-card pokemon-evolution" id="pokemon-evolution" aria-labelledby="pokemon-evolution-title">
+  <header><h3 id="pokemon-evolution-title">Familia evolutiva</h3><p>Especies presentes en la Pokédex de {{ pokedex.edition.dex_name }}</p></header>
+  <div class="pokemon-evolution-stages">
+    {% for stage in profile.evolution_stages %}
+    {% if not loop.first %}<span class="pokemon-evolution-arrow" aria-hidden="true">→</span>{% endif %}
+    <div class="pokemon-evolution-stage">
+      {% for relative in stage %}
+      <a class="pokemon-evolution-link{{ ' is-current' if relative.id == pokemon.id else '' }}" href="{{ url_for('pages.game', game_id=game.id, section='pokedex', pokemon=relative.id, q=pokedex.search, type=pokedex.type_slug, dex=pokedex.edition.dex_slug) }}" {% if relative.id == pokemon.id %}aria-current="page"{% endif %}>
+        <img src="{{ url_for('pokedex.image', filename=relative.artwork) }}" alt="" width="72" height="72" loading="lazy">
+        <span><small>#{{ '%03d'|format(relative.number) }}</small><strong>{{ relative.name }}</strong></span>
+      </a>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

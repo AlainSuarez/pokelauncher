@@ -1,0 +1,11 @@
+<div id="save-view" data-game="{{ game.id }}" data-name="{{ game.name }}" data-region="{{ game.region }}">
+  <header class="save-heading"><div><span class="eyebrow">TU AVENTURA</span><h2>Partidas y Pokémon</h2><p>Tu entrenador, tus compañeros y todos los Pokémon que guardas.</p></div><span class="save-readonly"><span aria-hidden="true">●</span> Solo lectura</span></header>
+  <form id="save-form" class="settings-form">
+    <label>Tu partida<select id="detected-saves" disabled><option value="">Buscando partidas…</option></select></label>
+    <div class="settings-actions"><button class="btn btn-primary" id="read-save" disabled>Actualizar</button></div>
+  </form>
+  <p id="save-status" role="status" aria-live="polite">Cargando…</p>
+  <p id="save-settings-link" hidden>No hay partidas disponibles para este juego. Revisa la carpeta de partidas en <a href="{{ url_for('pages.settings') }}">Configuración</a>.</p>
+  <div id="save-result"></div>
+  <p id="save-art-note" hidden>Completa la descarga de la <a href="{{ url_for('pages.game', game_id=game.id, section='pokedex') }}">Pokédex de este juego</a> para disponer de más imágenes.</p>
+</div>

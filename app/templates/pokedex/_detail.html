@@ -1,0 +1,39 @@
+{% set pokemon = pokedex.selected %}
+<div class="pokemon-navigation">
+  <a class="btn btn-ghost pokemon-back" href="{{ url_for('pages.game', game_id=game.id, section='pokedex', q=pokedex.search, type=pokedex.type_slug, dex=pokedex.edition.dex_slug) }}">← Volver a la Pokédex</a>
+  <nav class="pokemon-steps" aria-label="Navegación de Pokémon">
+    {% if pokemon.previous %}
+    <a rel="prev" href="{{ url_for('pages.game', game_id=game.id, section='pokedex', pokemon=pokemon.previous.id, q=pokedex.search, type=pokedex.type_slug, dex=pokedex.edition.dex_slug) }}" aria-label="Anterior: {{ pokemon.previous.name }}, número {{ pokemon.previous.number }}">‹ <span>#{{ '%03d'|format(pokemon.previous.number) }} {{ pokemon.previous.name }}</span></a>
+    {% endif %}
+    {% if pokemon.next %}
+    <a rel="next" href="{{ url_for('pages.game', game_id=game.id, section='pokedex', pokemon=pokemon.next.id, q=pokedex.search, type=pokedex.type_slug, dex=pokedex.edition.dex_slug) }}" aria-label="Siguiente: {{ pokemon.next.name }}, número {{ pokemon.next.number }}"><span>#{{ '%03d'|format(pokemon.next.number) }} {{ pokemon.next.name }}</span> ›</a>
+    {% endif %}
+  </nav>
+</div>
+{% set profile = pokemon.profile %}
+<nav class="pokemon-index" aria-label="Contenido de la ficha">
+  <a href="#pokemon-general">Ficha general</a><a href="#pokemon-edition">En {{ game.name }}</a>
+  {% if pokemon.stats %}<a href="#pokemon-stats">Estadísticas</a>{% endif %}
+  {% if profile and profile.evolution_stages %}<a href="#pokemon-evolution">Evoluciones</a>{% endif %}
+  {% if profile and profile.moves %}<a href="#pokemon-moves">Movimientos</a>{% endif %}
+</nav>
+<article class="pokemon-detail" id="pokemon-general">
+  <div class="pokemon-detail-art"><img src="{{ url_for('pokedex.image', filename=pokemon.artwork) }}" alt="{{ pokemon.name }}" width="360" height="360"></div>
+  <div class="pokemon-detail-info">
+    <p class="eyebrow">FICHA GENERAL · NACIONAL #{{ '%03d'|format(pokemon.id) }}</p>
+    <h3>{{ pokemon.name }}</h3><p class="pokemon-genus">{{ pokemon.genus }}</p>
+    {% if profile %}
+      <div class="pokemon-types">{% for kind in profile.general_types %}<span class="pokemon-type type-{{ kind.slug }}">{{ kind.name }}</span>{% endfor %}</div>
+      <p class="pokemon-caption">Tipos actuales de la especie · Origen: generación {{ profile.introduced }}{% if profile.category %} · {{ profile.category }}{% endif %}</p>
+    {% endif %}
+    <dl class="pokemon-measures"><div><dt>Altura</dt><dd>{{ '%g'|format(pokemon.height / 10) }} m</dd></div><div><dt>Peso</dt><dd>{{ '%g'|format(pokemon.weight / 10) }} kg</dd></div></dl>
+    <p class="pokemon-caption">Información compartida de la especie. Los datos de {{ game.name }} aparecen en su propio bloque.</p>
+  </div>
+</article>
+{% if profile %}{% include 'pokedex/_general.html' %}{% endif %}
+{% include 'pokedex/_edition.html' %}
+{% if profile %}
+  {% include 'pokedex/_evolution.html' %}
+  {% include 'pokedex/_moves.html' %}
+  {% include 'pokedex/_names.html' %}
+{% endif %}

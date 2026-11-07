@@ -1,0 +1,22 @@
+  <article class="detail-hero" style="--accent:{{ game.accent }};--accent2:{{ game.accent2 }}">
+    <div class="detail-cover"><div class="cover-fallback"><span>{{ game.mascot }}</span></div><img src="{{ game.cover }}" alt="Carátula de {{ game.name }}"></div>
+    <div class="detail-body">
+      <span class="modal-console">{{ console.name }} · Gen {{ game.generation }}</span>
+      <h2 class="modal-title" id="game-title">{{ game.name }}</h2>
+      <p class="modal-subtitle">{{ game.subtitle }} · {{ game.year }} · {{ game.region }}</p>
+      <p class="modal-desc">{{ game.desc }}</p>
+      <div class="facts">
+      {% for label, value in [('Región', game.region), ('Generación', game.generation), ('Año', game.year), ('Mascota', game.mascot), ('Consola', console.name), ('Desarrollo', game.developer)] %}
+        <div class="fact"><span>{{ label }}</span><strong>{{ value }}</strong></div>
+      {% endfor %}
+      </div>
+      <div class="fact-note"><div class="bulb">💡</div><p><strong>¿Sabías que…?</strong> {{ game.fact }}</p></div>
+      <div class="rom-row {{ '' if game.owned else 'missing' }}"><span class="dot"></span><code data-rom>{{ game.rom if game.owned else 'Sin ROM asociada' }}</code></div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" data-play="{{ game.id }}" {{ '' if game.owned else 'hidden' }}>▶ Jugar</button>
+        <a class="btn btn-ghost" data-howto href="{{ url_for('pages.game', game_id=game.id, section='configuracion') }}" {{ 'hidden' if game.owned else '' }}>¿Cómo añadir la ROM?</a>
+        <button class="btn btn-ghost" data-favorite="{{ game.id }}">♡ Favorito</button>
+        <span class="btn-note">Emulador según la configuración de la consola</span>
+      </div>
+    </div>
+  </article>

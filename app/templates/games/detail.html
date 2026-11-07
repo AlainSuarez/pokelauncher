@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}{{ game.name }} · PokéLauncher{% endblock %}
+{% block content %}
+<section id="game-page" class="game-page" data-game="{{ game.id }}" data-section="{{ section }}" aria-label="Detalle del juego" style="--accent:{{ game.accent }};--accent2:{{ game.accent2 }}">
+  <nav class="detail-navigation" aria-label="Navegación de juegos">
+    <a class="btn btn-ghost" href="{{ url_for('pages.library') }}">← Biblioteca</a>
+    {% if section != 'resumen' %}
+    <a class="detail-game-card" href="{{ url_for('pages.game', game_id=game.id) }}" aria-label="Resumen de {{ game.name }}">
+      <span class="detail-game-thumbnail"><img src="{{ game.cover }}" alt="" width="48" height="44"></span>
+      <span><strong>{{ game.name }}</strong><small>{{ console.name }}</small></span>
+    </a>
+    {% else %}
+    <div class="detail-game-steps"><a class="btn btn-ghost" data-step="-1" hidden>‹ Anterior</a> <a class="btn btn-ghost" data-step="1" hidden>Siguiente ›</a></div>
+    {% endif %}
+  </nav>
+  <nav class="detail-tabs" aria-label="Secciones del juego">
+    {% for key, label in game_sections.items() %}
+    <a href="{{ url_for('pages.game', game_id=game.id, section=key) }}" {% if section == key %}aria-current="page"{% endif %}>{{ label }}</a>
+    {% endfor %}
+  </nav>
+  <section class="game-section{{ ' detail-panel' if section not in ['resumen', 'pokedex'] else '' }}" id="game-section">
+    {% include 'games/_' ~ section ~ '.html' %}
+  </section>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+{% if section == 'partidas' %}<script src="{{ url_for('static', filename='js/saves.js') }}"></script>{% endif %}
+{% if section == 'pokedex' %}<script src="{{ url_for('static', filename='js/pokedex.js') }}"></script>{% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+.aws/
+.codex/
+.agents/
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.pyc
+*.sqlite3
+*.sqlite3-*
+
+# Datos personales y archivos de juegos
+roms/
+saves/
+*.sav
+*.dsv
+*.gb
+*.gbc
+*.gba
+*.nds
+*.3ds
+*.cia
+*.pem
+*.key
+
+# PKHeX.Core helper build artifacts
+tools/SaveReader/bin/
+tools/SaveReader/obj/
+tools/SaveReader/publish/

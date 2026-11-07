@@ -1,0 +1,28 @@
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="pokeball" aria-hidden="true"></div>
+        <div>
+          <h1>Poké<span>Launcher</span></h1>
+          <p>Game Boy → 3DS</p>
+        </div>
+      </div>
+
+      <p class="nav-label">Consolas</p>
+      <nav id="console-nav" class="console-nav" aria-label="Consolas"></nav>
+
+      <div class="collection-card">
+        <div class="collection-head">
+          <span>Tu colección</span>
+          <strong id="collection-count">0 / 0</strong>
+        </div>
+        <div class="progress"><span id="collection-progress"></span></div>
+        <p id="collection-hint">Cargando catálogo…</p>
+      </div>
+
+      <a class="settings-link" href="{{ url_for('pages.settings') }}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m9 3-1 3-3 1-2 5 2 5 3 1 1 3h6l1-3 3-1 2-5-2-5-3-1-1-3Z"/><circle cx="12" cy="12" r="3"/></svg><span>Configuración</span><span aria-hidden="true">›</span></a>
+      <div class="sidebar-footer">
+        <span class="status-dot"></span>
+        <span>Servidor local conectado</span>
+      </div>
+    </aside>
+

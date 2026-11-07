@@ -1,0 +1,16 @@
+{% if pokemon.stats %}
+<section id="pokemon-stats" class="pokemon-stats" aria-labelledby="pokemon-stats-title">
+  <header class="pokemon-stats-heading">
+    <div><h4 id="pokemon-stats-title">Estadísticas base</h4><p>{{ game.name }}</p></div>
+    <span class="pokemon-stats-total">Total <strong>{{ pokemon.stats_total }}</strong></span>
+  </header>
+  <dl class="pokemon-stats-list">
+    {% for stat in pokemon.stats %}
+    <div class="pokemon-stat">
+      <dt>{{ stat.label }}</dt>
+      <dd><span class="pokemon-stat-value">{{ stat.value }}</span><meter min="0" max="255" value="{{ stat.value }}" aria-label="{{ stat.label }}: {{ stat.value }} de 255">{{ stat.value }}</meter></dd>
+    </div>
+    {% endfor %}
+  </dl>
+</section>
+{% endif %}

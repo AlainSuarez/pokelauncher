@@ -1,0 +1,26 @@
+<div class="pokemon-data-grid">
+  <section class="pokemon-data-card" aria-labelledby="pokemon-training-title">
+    <header><h3 id="pokemon-training-title">Datos y entrenamiento</h3><p>Referencia general actual de la especie</p></header>
+    <dl class="pokemon-facts-list">
+      {% if profile.capture_rate is not none %}<div><dt>Tasa de captura</dt><dd>{{ profile.capture_rate }} <span class="pokemon-caption">/ 255</span></dd></div>{% endif %}
+      <div><dt>Crecimiento</dt><dd>{{ profile.growth }}</dd></div>
+      {% if profile.base_experience is not none %}<div><dt>Experiencia base</dt><dd>{{ profile.base_experience }}</dd></div>{% endif %}
+      {% if profile.base_friendship is not none %}<div><dt>Amistad base</dt><dd>{{ profile.base_friendship }}</dd></div>{% endif %}
+      {% if profile.general_effort %}<div><dt>Puntos EV</dt><dd>{% for item in profile.general_effort %}<span>{{ item.value }} {{ item.name }}</span>{% if not loop.last %} · {% endif %}{% endfor %}</dd></div>{% endif %}
+      {% if profile.general_abilities %}<div><dt>Habilidades</dt><dd>{% for ability in profile.general_abilities %}<span>{{ ability.name }}{% if ability.hidden %} <small class="pokemon-caption">(oculta)</small>{% endif %}</span>{% if not loop.last %}<br>{% endif %}{% endfor %}</dd></div>{% endif %}
+    </dl>
+    <p class="pokemon-caption">Valores generales de PokéAPI; pueden variar o no ser aplicables en juegos anteriores. La tasa de captura es un índice, no un porcentaje.</p>
+  </section>
+  <section class="pokemon-data-card" aria-labelledby="pokemon-breeding-title">
+    <header><h3 id="pokemon-breeding-title">Crianza y características</h3><p>Información general compartida entre juegos</p></header>
+    <dl class="pokemon-facts-list">
+      {% if profile.egg_groups %}<div><dt>Grupos huevo</dt><dd>{{ profile.egg_groups|join(' · ') }}</dd></div>{% endif %}
+      {% if profile.gender %}<div><dt>Sexo</dt><dd>{{ profile.gender }}</dd></div>{% endif %}
+      {% if profile.gender_differences is not none %}<div><dt>Diferencias por sexo</dt><dd>{{ 'Sí' if profile.gender_differences else 'No' }}</dd></div>{% endif %}
+      {% if profile.egg_cycles is not none %}<div><dt>Ciclos de eclosión</dt><dd>{{ profile.egg_cycles }}</dd></div>{% endif %}
+      {% if profile.habitat %}<div><dt>Hábitat</dt><dd>{{ profile.habitat }}</dd></div>{% endif %}
+      {% if profile.color %}<div><dt>Color</dt><dd>{{ profile.color }}</dd></div>{% endif %}
+      {% if profile.shape %}<div><dt>Forma corporal</dt><dd>{{ profile.shape }}</dd></div>{% endif %}
+    </dl>
+  </section>
+</div>

@@ -1,0 +1,21 @@
+{% set languages = {'ja-Hrkt':'Japonés','roomaji':'Romanización','ko':'Coreano','zh-Hant':'Chino tradicional','fr':'Francés','de':'Alemán','es':'Español','it':'Italiano','en':'Inglés','ja':'Japonés','zh-Hans':'Chino simplificado'} %}
+{% if profile.names %}
+<details class="pokemon-data-card pokemon-disclosure">
+  <summary>Nombres en otros idiomas <span class="pokemon-count">{{ profile.names|length }}</span></summary>
+  <dl class="pokemon-language-list">{% for item in profile.names %}<div><dt>{{ languages.get(item.language,item.language) }}</dt><dd lang="{{ item.language if item.language != 'roomaji' else 'ja-Latn' }}">{{ item.name }}</dd></div>{% endfor %}</dl>
+</details>
+{% endif %}
+{% if profile.varieties|length > 1 %}
+<details class="pokemon-data-card pokemon-disclosure">
+  <summary>Formas y variedades de la especie <span class="pokemon-count">{{ profile.varieties|length }}</span></summary>
+  <p class="pokemon-caption">Listado general de la especie; no indica que estas formas estén disponibles en {{ game.name }}.</p>
+  <ul class="pokemon-varieties">{% for item in profile.varieties %}<li>{{ item.name }}{% if item.default %} <span class="pokemon-caption">· Forma principal</span>{% endif %}</li>{% endfor %}</ul>
+</details>
+{% endif %}
+
+{% if profile.pokedex_numbers %}
+<details class="pokemon-data-card pokemon-disclosure">
+  <summary>Números en otras Pokédex <span class="pokemon-count">{{ profile.pokedex_numbers|length }}</span></summary>
+  <dl class="pokemon-language-list">{% for item in profile.pokedex_numbers %}<div><dt>{{ item.name }}</dt><dd>#{{ '%03d'|format(item.number) }}</dd></div>{% endfor %}</dl>
+</details>
+{% endif %}

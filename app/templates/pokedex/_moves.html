@@ -1,0 +1,15 @@
+{% if profile.moves %}
+<section class="pokemon-data-card pokemon-moves" id="pokemon-moves" aria-labelledby="pokemon-moves-title">
+  <header><h3 id="pokemon-moves-title">Movimientos en {{ game.name }}</h3><p>Aprendizaje registrado para esta edición. Se conservan los nombres originales cuando no hay traducción local.</p></header>
+  {% for group in profile.moves %}
+  <details class="pokemon-move-group" {% if group.key == 'level-up' %}open{% endif %}>
+    <summary><span>{{ group.name }}</span><span class="pokemon-count">{{ group.moves|length }}</span></summary>
+    <table class="pokemon-move-table">
+      <caption class="sr-only">{{ group.name }} en {{ game.name }}</caption>
+      <thead><tr>{% if group.key == 'level-up' %}<th scope="col">Nivel</th>{% endif %}<th scope="col">Movimiento</th></tr></thead>
+      <tbody>{% for move in group.moves %}<tr>{% if group.key == 'level-up' %}<td>{{ move.level if move.level > 0 else 'Inicial' }}</td>{% endif %}<td>{{ move.name }}</td></tr>{% endfor %}</tbody>
+    </table>
+  </details>
+  {% endfor %}
+</section>
+{% endif %}

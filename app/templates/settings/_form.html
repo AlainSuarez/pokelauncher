@@ -1,0 +1,36 @@
+<header class="settings-heading"><a class="settings-back" href="{{ url_for('pages.library') }}">← Volver a la colección</a><p class="eyebrow">TU ESPACIO DE JUEGO</p><h2>Todo listo para tu próxima aventura.</h2><p>Conecta tu colección y elige cómo jugar en cada consola.</p></header>
+<div class="settings-layout">
+  <nav class="settings-systems" aria-label="Configurar consola">
+    {% for key, name in [('general', 'General')] + system_names.items()|list %}
+    <button type="button" data-settings-system="{{ key }}" aria-pressed="{{ 'true' if key == active_system else 'false' }}">
+      {% if key != 'general' %}<span class="system-monogram">{{ key|upper }}</span>{% endif %}
+      <span><strong>{{ name }}</strong><small>{{ 'Carpeta de la colección' if key == 'general' else ('Emulador configurado' if config.systems[key].emulator else 'Pendiente de configurar') }}</small></span><span aria-hidden="true">›</span>
+    </button>
+    {% endfor %}
+  </nav>
+  <form id="global-settings" class="settings-form">
+    <section data-settings-panel="general" {% if active_system != 'general' %}hidden{% endif %}>
+      <div class="settings-section-title"><span class="eyebrow">TU COLECCIÓN</span><h3>Una carpeta para todos tus juegos</h3><p>Selecciona la carpeta que contiene las subcarpetas de cada consola.</p></div>
+      <div class="root-folder-label"><label for="rom-root">Carpeta raíz de ROMs</label><div class="folder-picker"><input id="rom-root" name="rom_root" value="{{ config.rom_root }}" placeholder="/home/usuario/Roms"><button type="button" class="btn btn-ghost" data-browse-root>Examinar…</button></div></div>
+      <div class="rom-folder-preview" aria-live="polite"></div>
+      <p class="settings-footnote">Las subcarpetas se leen si existen; no se crean ni se mueven archivos. Puedes definir otras rutas en la pestaña de cada consola.</p>
+    </section>
+    {% for key, name in system_names.items() %}{% set value = config.systems[key] %}
+    <fieldset data-system="{{ key }}" {% if key != active_system %}hidden{% endif %}>
+      <legend>{{ name }}</legend>
+      <div class="settings-section-title"><span class="eyebrow">BIBLIOTECA Y EMULACIÓN</span><h3>{{ name }}</h3><p>Tus juegos, su emulador y el lugar donde guardas tus aventuras.</p></div>
+      <label>Rutas alternativas de ROMs (opcional, una por línea)<textarea name="folders" rows="3" placeholder="/home/usuario/Roms/{{ key }}">{{ value.folders|join('\n') }}</textarea><small>Déjalo vacío para usar la subcarpeta de la carpeta raíz general.</small></label>
+      <div class="settings-columns">
+        <label>Tipo de instalación<select name="mode"><option value="native" {% if value.mode == 'native' %}selected{% endif %}>Ejecutable nativo / AppImage</option><option value="flatpak" {% if value.mode == 'flatpak' %}selected{% endif %}>Flatpak</option></select></label>
+        <div><label for="emulator-{{ key }}">Ejecutable o ID de Flatpak</label><div class="folder-picker"><input id="emulator-{{ key }}" name="emulator" value="{{ value.emulator }}" placeholder="{{ 'melonDS' if key == 'nds' else 'azahar' if key == '3ds' else 'mgba-qt' }}"><button type="button" class="btn btn-ghost" data-browse-emulator {% if value.mode == 'flatpak' %}hidden{% endif %}>Examinar…</button></div></div>
+      </div>
+      <div><label for="save-folder-{{ key }}">Carpeta de partidas (opcional)</label><div class="folder-picker"><input id="save-folder-{{ key }}" name="save_folder" value="{{ value.save_folder }}" placeholder="/ruta/a/partidas"><button type="button" class="btn btn-ghost" data-browse-saves>Examinar…</button></div></div>
+      <button type="button" class="btn btn-ghost" data-check="{{ key }}">Comprobar emulador guardado</button>
+    </fieldset>
+    {% endfor %}
+    <p class="settings-footnote">La carpeta de partidas permite encontrar los guardados en cada juego; no cambia dónde guarda el emulador. Para Flatpak, concede acceso a las carpetas de ROMs desde los permisos de la aplicación.</p>
+    <div class="settings-actions"><button class="btn btn-primary" id="save-and-scan">Guardar y buscar ROMs</button><span class="settings-action-hint">Aplica las rutas y actualiza los archivos disponibles en un solo paso.</span></div>
+    <p id="settings-status" role="status"></p>
+  </form>
+</div>
+<div id="scan-results"></div>

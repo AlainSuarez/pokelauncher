@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}PokéLauncher · Colección Game Boy → 3DS{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <div class="bg-glow bg-glow-red"></div>
+  <div class="bg-glow bg-glow-blue"></div>
+
+  <div class="app">
+{% include 'includes/sidebar.html' %}
+<main class="main">{% block content %}{% endblock %}{% include 'includes/footer.html' %}</main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script id="catalog-data" type="application/json">{{ catalog|tojson }}</script>
+<script src="{{ url_for('static', filename='js/common.js') }}"></script>
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body></html>
